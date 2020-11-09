@@ -2,33 +2,40 @@ package com.example.emailsender;
 
 import java.util.Properties;
 
+import com.example.emailsender.security.User;
+import com.example.emailsender.security.UserRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
+
+// TODO: Add profiles for development and production
+//
 @SpringBootApplication
 public class EmailsenderApplication implements CommandLineRunner {
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
 	@Autowired
 	JavaMailSender sender;
-
+	@Autowired
+	UserRepository repository;
 	public static void main(String[] args) {
 		SpringApplication.run(EmailsenderApplication.class, args);
 	}
 
 	@Override
 	public void run(String... args) throws Exception {
-		SimpleMailMessage email = new SimpleMailMessage();
-        email.setTo("dudziecdamian@gmail.com");
-        email.setSubject("Subj");
-		email.setText("message");
+		User user = new User("damian", passwordEncoder.encode("damian123"));
 		
-        sender.send(email);
+		repository.save(user);
 	}
 
 	@Bean
@@ -47,5 +54,8 @@ public class EmailsenderApplication implements CommandLineRunner {
 
 		return mailSender;
 	}
-
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 }
