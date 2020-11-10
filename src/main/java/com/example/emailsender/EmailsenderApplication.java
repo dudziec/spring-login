@@ -20,19 +20,23 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 //
 @SpringBootApplication
 public class EmailsenderApplication implements CommandLineRunner {
-    @Autowired
-    PasswordEncoder passwordEncoder;
+	@Autowired
+    private PasswordEncoder passwordEncoder;
+	@Autowired
+	private JavaMailSender sender;
+	@Autowired
+	private UserRepository repository;
+	@Autowired
+	private YamlConfig config;
 
-	@Autowired
-	JavaMailSender sender;
-	@Autowired
-	UserRepository repository;
 	public static void main(String[] args) {
 		SpringApplication.run(EmailsenderApplication.class, args);
 	}
 
 	@Override
 	public void run(String... args) throws Exception {
+		System.out.println(config.getServerPort());
+		System.out.println(config.getUrl());
 		User user = new User("damian", passwordEncoder.encode("damian123"));
 		
 		repository.save(user);
