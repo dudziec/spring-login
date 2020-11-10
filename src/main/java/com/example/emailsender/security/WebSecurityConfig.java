@@ -16,7 +16,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/public", "/h2/**").permitAll()
                 .anyRequest().authenticated()
             .and()
-            // Shortcut for successHandler
+            // Shortcut for successHandler, second parameter: "always use?"
                 .formLogin().defaultSuccessUrl("/hello", true)
             .and()
                 .httpBasic()
