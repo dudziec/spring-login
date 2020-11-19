@@ -14,3 +14,12 @@ spring:
     jpa:
         hibernate:
             ddl-auto: create-drop
+
+mailsender:
+    user:
+        username: kwokdamian123@gmail.com
+        password: 
+    host:
+        name: smtp.gmail.com
+        port: 465
+    url: http://localhost:3000/confirm?key=
