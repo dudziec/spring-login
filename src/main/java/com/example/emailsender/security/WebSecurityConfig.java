@@ -10,14 +10,14 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableWebSecurity
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
+        http.cors().and().csrf().disable()
             .authorizeRequests()
-                .antMatchers("/hello", "/h2/**").permitAll()
-                .anyRequest().authenticated()
+                //.antMatchers("/hello", "/h2/**", "/register").permitAll()
+                .anyRequest().permitAll()
             .and()
             // Shortcut for successHandler, second parameter: "always use?"
                 .formLogin().defaultSuccessUrl("/hello", true)
@@ -25,9 +25,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .httpBasic()
             // TODO: Remove before migration to production,
             // H2 Console runs inside a frame. Spring Security disables rendering pages within an iframe. 
-            .and().headers().frameOptions().sameOrigin()
+            .and().headers().frameOptions().sameOrigin();
             // Disable CSRF Protection for H2 Console
-            .and().csrf().ignoringAntMatchers("/h2/**");
     }
 
     @Bean
@@ -35,7 +34,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new WebMvcConfigurer(){
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/hello").allowedOrigins("http://localhost:3000");
+                registry.addMapping("/**").allowedOrigins("http://localhost:3000");
             }
         };
     }

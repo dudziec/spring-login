@@ -1,6 +1,7 @@
 package com.example.emailsender.security;
 
 import java.util.Collection;
+import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,7 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 @Table
-public class User implements UserDetails {
+class User implements UserDetails {
 
     private static final long serialVersionUID = -4603885505867348071L;
 
@@ -23,21 +24,28 @@ public class User implements UserDetails {
     private Long id;
 
     @Column(nullable = false)
-    private String username;
+    private String email;
     @Column(nullable = false)
     private String password;
 
     // TODO: Enable via confirming password
-    private boolean enabled = true;
+    private boolean enabled = false;
     private boolean accountNonExpired = true;
     private boolean accountNonLocked = true;
     private boolean credentialsNonExpired = true;
+    private String confirmationToken;
 
-    public User() {}
+    public User() {
+    }
 
-    public User(String username, String password) {
-        this.username = username;
+    public User(String email, String password) {
+        this.email = email;
         this.password = password;
+        this.confirmationToken = UUID.randomUUID().toString();
+    }
+
+    public String getConfirmationToken() {
+        return confirmationToken;
     }
 
     @Override
@@ -52,7 +60,11 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.username;
+        return this.email;
+    }
+
+    public String getEmail() {
+        return this.email;
     }
 
     @Override
