@@ -22,4 +22,4 @@ mailsender:
     host:
         name: smtp.gmail.com
         port: 465
-    url: http://localhost:3000/confirm?key=
+    url: http://localhost:3000/register/confirm/

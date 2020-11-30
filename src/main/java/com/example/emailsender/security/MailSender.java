@@ -27,7 +27,8 @@ class MailSender {
         message.setText(properties.getContent() + user.getConfirmationToken());
         message.setTo(user.getEmail());
 
-        sender.send(message);
+        
+        //sender.send(message);
     }
 
     private JavaMailSender getConfiguredJavaMailSender() {

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 public class UserController {
@@ -24,8 +25,13 @@ public class UserController {
     @PostMapping("/reg")
     public ResponseEntity<UserRegistrationDTO> register(@RequestBody UserRegistrationDTO user) {
         logger.info("Registering user with email: {} and password: {}", user.getEmail(), user.getPassword());
-        service.registerUser(user);
-        return new ResponseEntity<UserRegistrationDTO>(HttpStatus.OK);
+        
+        try {
+            service.registerUser(user);
+            return new ResponseEntity<UserRegistrationDTO>(HttpStatus.OK);
+        } catch (EmailTakenException ex) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "E-mail is already in use!", ex);
+        }
     }
 
     @GetMapping("/confirm")
@@ -36,4 +42,9 @@ public class UserController {
         // TODO: Return valid response object
         return "Account confirmed";
     }
+
+    // @ExceptionHandler({EmailTakenException.class})
+    // public ResponseEntity handleException() {
+    //     return ResponseEntity.status(HttpStatus.CONFLICT).body("Email is already in use!");
+    // }
 }
