@@ -24,11 +24,11 @@ class UserService {
     }
 
     // TODO: Transactional
-    User registerUser(UserRegistrationDTO userRegistrationDTO) {
+    User registerUser(UserRegistrationDTO userRegistrationDTO) throws EmailTakenException {
         Optional<User> existingUser = repository.findByEmail(userRegistrationDTO.getEmail());
         if(existingUser.isPresent()) {
             logger.info("User with email: {} is already in database.", userRegistrationDTO.getEmail());
-            // throw exception
+            throw new EmailTakenException();
         }
 
         User newUser = new User(userRegistrationDTO.getEmail(), passwordEncoder.encode(userRegistrationDTO.getPassword()));
